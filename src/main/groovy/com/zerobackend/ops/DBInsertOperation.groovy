@@ -28,19 +28,19 @@ class DBInsertOperation {
 		this
 	}
 	
-	DBInsertOperation object(List<Map<String, ?>> objects) {
-		_objects = objects.collect { 
+	DBInsertOperation object(List<Map<String, ?>> object) {
+		_objects = object.collect { 
 			adapter.toDBObject it
 		}
 		this
 	}
 	
 	DBInsertOperation object(Map<String, ?> object) {
-		objects.add adapter.toDBObject(object)
+		_objects.add adapter.toDBObject(object)
 		this
 	}
 	
 	WriteResult insert() {
-		gmongo.getDB(_database)[collection] << _objects
+		gmongo.getDB(_database)[_collection] << _objects
 	}
 }

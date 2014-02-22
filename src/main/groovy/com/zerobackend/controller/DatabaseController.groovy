@@ -22,7 +22,7 @@ import com.zerobackend.model.Cursor
 import com.zerobackend.services.DatabaseService
 
 /**
- * This is just a basic query controller for now...
+ * This is just a basic query controller for now... We need to make it full asynchronous and add security + user meta data support
  * @author ian
  *
  */

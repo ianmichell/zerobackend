@@ -14,17 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 @ComponentScan()
 @EnableAutoConfiguration
 class Application {
-
-//	@Bean
-//	public Jackson2ObjectMapperFactoryBean jackson2ObjectMapperFactoryBean() {
-//		Jackson2ObjectMapperFactoryBean factory = new Jackson2ObjectMapperFactoryBean();
-//		factory.setFeaturesToEnable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, JsonParser.Feature.ALLOW_SINGLE_QUOTES);
-//		return factory;
-//	}
 	
 	@Bean
 	public ObjectMapper objectMapper() {
-		println "Mapper"
 		ObjectMapper mapper = new ObjectMapper()
 		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
 		mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)

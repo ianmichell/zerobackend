@@ -34,6 +34,9 @@ class JsonToDBObjectAdapter {
 	}
 	
 	Map<String, ?> toMap(DBObject o) {
+		if (!o) {
+			return null
+		}
 		o.collectEntries { key, value ->
 			// We only need to replace object ids...
 			def newValue = value

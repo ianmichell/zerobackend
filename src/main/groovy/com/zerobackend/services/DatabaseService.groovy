@@ -28,6 +28,10 @@ class DatabaseService {
 		return gmongo.getDB(database)[collection].stats
 	}
 	
+	void ensureIndex(String database, String collection, Map<String, Integer> values, Map<String, ?> options) {
+		gmongo.getDB(database).getCollection(collection).ensureIndex(adapter.toDBObject(values), adapter.toDBObject(options))
+	}
+	
 	Set<String> collectionNames(String database) {
 		return gmongo.getDB(database).collectionNames
 	}
