@@ -34,6 +34,7 @@ dependencies {
 	compile("com.fasterxml.jackson.core:jackson-databind")
 	compile("com.gmongo:gmongo:1.0")
 	compile 'org.codehaus.groovy:groovy-all:2.1.6'
+	compile 'joda-time:joda-time:2.3'
 	testCompile("junit:junit:4.11")
 }
 
