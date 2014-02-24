@@ -12,7 +12,7 @@ import com.zerobackend.ops.DBInsertOperation
 import com.zerobackend.ops.DBQueryOperation
 import com.zerobackend.ops.DBUpdateOperation
 
-@Service
+@Service("databaseService")
 class DatabaseService {
 	
 	@Autowired
@@ -23,17 +23,29 @@ class DatabaseService {
 	
 	CommandResult stats(String database, String collection = null) {
 		if (!collection) {
-			return gmongo.getDB(database).stats
+			return gmongo.getDB(database).getStats()
 		}
-		return gmongo.getDB(database)[collection].stats
+		return gmongo.getDB(database)[collection].getStats()
 	}
 	
 	void ensureIndex(String database, String collection, Map<String, Integer> values, Map<String, ?> options) {
 		gmongo.getDB(database).getCollection(collection).ensureIndex(adapter.toDBObject(values), adapter.toDBObject(options))
 	}
 	
+	public boolean databaseExists(String database) {
+		return databaseNames().contains(database)
+	}
+	
+	public boolean collectionExists(String database, String collection) {
+		databaseNames().contains(database) && gmongo.getDB(database).collectionExists(collection)
+	}
+	
+	List<String> databaseNames() {
+		return gmongo.getDatabaseNames()
+	}
+	
 	Set<String> collectionNames(String database) {
-		return gmongo.getDB(database).collectionNames
+		return gmongo.getDB(database).getCollectionNames()
 	}
 	
 	Cursor find(Closure c) {

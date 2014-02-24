@@ -4,7 +4,7 @@ buildscript {
 		mavenLocal()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:0.5.0.M7")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.BUILD-SNAPSHOT")
 	}
 }
 
@@ -12,6 +12,12 @@ apply plugin: "java"
 apply plugin: "groovy"
 apply plugin: "spring-boot"
 apply plugin: "eclipse"
+
+eclipse {
+	classpath {
+	   downloadSources=true
+	}
+}
 
 jar {
 	baseName = "zerobackend"
@@ -25,17 +31,21 @@ repositories {
 }
 
 dependencies {
-	compile("org.springframework.boot:spring-boot:0.5.0.M7")
-	compile("org.springframework.boot:spring-boot-starter-web:0.5.0.M7")
-	compile("org.springframework.boot:spring-boot-starter-websocket:0.5.0.M7")
-	compile('org.springframework:spring-tx:4.0.0.RELEASE')
-	compile("org.springframework:spring-messaging:4.0.0.RELEASE")
-	compile("org.springframework.security:spring-security-web:3.2.0.RELEASE")
-	compile("org.springframework.security:spring-security-config:3.2.0.RELEASE")
-	compile("org.springframework.data:spring-data-mongodb:1.3.3.RELEASE")
+	compile("org.springframework.boot:spring-boot")
+//	compile("org.springframework.boot:spring-boot-starter-security")
+	compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-websocket")
+	compile("org.springframework.boot:spring-boot-starter-data-mongodb")
+	compile('org.springframework:spring-tx')
+	compile("org.springframework:spring-messaging")
+	compile("org.springframework.security:spring-security-web:3.2.1.RELEASE")
+	compile("org.springframework.security:spring-security-config:3.2.1.RELEASE")
+	//compile("org.springframework.data:spring-data-mongodb:1.3.3.RELEASE")
+	//compile("org.springframework.data:spring-data-mongodb:1.4.0.RC1")
 	compile("com.fasterxml.jackson.core:jackson-databind")
+	compile("org.mongodb:mongo-java-driver:2.11.4")
 	compile("com.gmongo:gmongo:1.0")
-	compile 'org.codehaus.groovy:groovy-all:2.1.6'
+	compile 'org.codehaus.groovy:groovy-all:2.1.8'
 	compile 'joda-time:joda-time:2.3'
 	testCompile("junit:junit:4.11")
 }

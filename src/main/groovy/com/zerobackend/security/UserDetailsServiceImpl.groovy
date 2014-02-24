@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 import com.zerobackend.adapter.UserToMapAdapter
 import com.zerobackend.services.DatabaseService
 
-@Service("userDetailsService")
+@Service("userService")
 class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Autowired

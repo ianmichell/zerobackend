@@ -1,5 +1,3 @@
-
-
 package com.zerobackend.config.startup
 
 import org.springframework.beans.factory.annotation.Autowired

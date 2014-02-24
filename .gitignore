@@ -2,5 +2,6 @@
 .classpath
 .project
 .gradle
+.DS_Store
 bin
 build

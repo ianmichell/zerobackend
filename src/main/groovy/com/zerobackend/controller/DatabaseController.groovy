@@ -4,6 +4,8 @@ import java.util.concurrent.Callable
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.security.access.method.P
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.InitBinder
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,10 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 import com.mongodb.CommandResult
-import com.mongodb.DBObject
 import com.mongodb.WriteResult
 import com.zerobackend.controller.conversion.JsonPropertyEditor
 import com.zerobackend.model.Cursor
+import com.zerobackend.security.AuthorisationService
 import com.zerobackend.services.DatabaseService
 
 /**
@@ -32,6 +34,9 @@ class DatabaseController {
 
 	@Autowired
 	DatabaseService databaseService
+	
+	@Autowired
+	AuthorisationService authorisationService
 
 	@Autowired
 	JsonPropertyEditor jsonConverter
@@ -41,10 +46,22 @@ class DatabaseController {
 		// we can bind some validations etc here!
 		binder.registerCustomEditor(Map.class, jsonConverter)
 	}
+	
+	@RequestMapping(method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	Callable<List<String>> showDatabases() {
+		new Callable<List<String>>() {
+			@Override
+			public List<String> call() {
+				databaseService.databaseNames()
+			}
+		}
+	}
 
 	@RequestMapping(value="/{database}", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.databaseExists(#database)")
 	@ResponseBody
-	Callable<Set<String>> showCollections(@PathVariable("database") String database) {
+	Callable<Set<String>> showCollections(@PathVariable("database") @P("database") String database) {
 		return new Callable<Set<String>>() {
 			@Override
 			public Set<String> call() {
@@ -54,8 +71,9 @@ class DatabaseController {
 	}
 
 	@RequestMapping(value="/{database}/stats", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.databaseExists(#database)")
 	@ResponseBody
-	Callable<CommandResult> databaseInfo(@PathVariable("database") String database) {
+	Callable<CommandResult> databaseInfo(@PathVariable("database") @P("database") String database) {
 		return new Callable<CommandResult>() {
 			@Override
 			public CommandResult call() {
@@ -65,6 +83,7 @@ class DatabaseController {
 	}
 
 	@RequestMapping(value="/{database}/{collection}/stats", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.collectionExists(#database, #collection)")
 	@ResponseBody
 	Callable<Map> collectionInfo(@PathVariable("database") String database, @PathVariable("collection") String collection) {
 		return new Callable<CommandResult>() {
@@ -74,8 +93,9 @@ class DatabaseController {
 			}
 		}
 	}
-
-	@RequestMapping(value="/{database}/{collection}/find", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	
+	@RequestMapping(value=["/{database}/{collection}","/{database}/{collection}/find"], method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.collectionExists(#d, #c)")
 	@ResponseBody
 	Callable<Cursor> find(@PathVariable("database") String d, @PathVariable("collection") c,
 			@RequestParam(value="query", defaultValue="{}") Map<String, ?> q,
@@ -99,6 +119,7 @@ class DatabaseController {
 	}
 
 	@RequestMapping(value="/{database}/{collection}/findOne", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.collectionExists(#d, #c)")
 	@ResponseBody
 	Callable<Map> findOne(@PathVariable("database") String d, @PathVariable("collection") c,
 			@RequestParam(value="query", defaultValue="{}") Map<String, ?> q) {
@@ -116,6 +137,7 @@ class DatabaseController {
 	}
 
 	@RequestMapping(value="/{database}/{collection}/{documentId}", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.collectionExists(#d, #c)")
 	@ResponseBody
 	Callable<Map> get(@PathVariable("database") String d, @PathVariable("collection") String c, @PathVariable("documentId") String id) {
 		return new Callable<Map>() {
@@ -131,6 +153,7 @@ class DatabaseController {
 	}
 	
 	@RequestMapping(value="/{database}/{collection}/insert", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.collectionExists(#d, #c)")
 	@ResponseBody
 	Callable<WriteResult> insert(@PathVariable("database") String d, @PathVariable("collection") String c, @RequestBody Object o) {
 		return new Callable<WriteResult>() {
@@ -146,6 +169,7 @@ class DatabaseController {
 	}
 	
 	@RequestMapping(value="/{database}/{collection}/update", method=RequestMethod.PUT, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.collectionExists(#d, #c)")
 	@ResponseBody
 	Callable<WriteResult> update(@PathVariable("database") String d, @PathVariable("collection") String c, @RequestBody Map<String, ?> u) {
 		return new Callable<WriteResult>() {
@@ -168,6 +192,7 @@ class DatabaseController {
 	}
 	
 	@RequestMapping(value="/{database}/{collection}/findAndModify", method=RequestMethod.PUT, produces=MediaType.APPLICATION_JSON_VALUE, consumes=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("@databaseService.collectionExists(#d, #c)")
 	@ResponseBody
 	Callable<Map> findAndModify(@PathVariable("database") String d, @PathVariable("collection") String c, @RequestBody Map<String, ?> u) {
 		return new Callable<Map>() {
