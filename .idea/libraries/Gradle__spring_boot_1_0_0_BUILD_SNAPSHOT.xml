@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: spring-boot-1.0.0.BUILD-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.springframework.boot/spring-boot/1.0.0.BUILD-SNAPSHOT/jar/4b6f7f685180b5e093884ad484cbc2c7eec2d3d5/spring-boot-1.0.0.BUILD-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.springframework.boot/spring-boot/1.0.0.BUILD-SNAPSHOT/source/9f635d9e5ca45c2a36a29f000f82a6e1ca5e9266/spring-boot-1.0.0.BUILD-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
